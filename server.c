@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:43:11 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/26 14:12:27 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/26 17:28:18 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,28 +32,6 @@ int		traduction(int signumber, char *tmp)
 	return (0);
 }
 
-void	send_message(int server_pid, char *msg)
-{
-	int		i;
-	int		bits;
-
-	i = 0;
-	while (msg[i])
-	{
-		bits = 0;
-		while (bits < 8)
-		{
-			if ((msg[i] >> (7 - bits)) & 1)
-				kill(server_pid, SIGUSR1);
-			else
-				kill(server_pid, SIGUSR2);
-			usleep(256);
-			bits++;
-		}
-		i++;
-	}
-}
-
 void	handler(int signumber)
 {
 	static char		client_pid[6] = {'\0'};
@@ -70,14 +48,15 @@ void	handler(int signumber)
 			client_pid[i++] = tmp;
 		if (ret == 1 && tmp == '\0')
 		{
+			ft_putstr("Message from ");
+			ft_putstr(client_pid);
+			ft_putstr(" : ");
 			count++;
-			i = 5;
+			i = -1;
 		}
 		ret = 0;
 	}
-	if (i == 5)
-		i = -1;
-	else if (i == -1)
+	if (i == -1)
 	{
 		if (ret == 1 && tmp == '\0')
 			count++;
@@ -85,7 +64,9 @@ void	handler(int signumber)
 	}
 	if (count == 2)
 	{
-		send_message(ft_atoi(client_pid), "Message correctement recu !");
+		ft_putchar('\n');
+		usleep(664);
+		kill(ft_atoi(client_pid), SIGUSR1);
 		i = 0;
 		count = 0;
 		while (i < 6)

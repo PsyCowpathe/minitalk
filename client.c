@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:51:16 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/26 14:12:29 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/26 17:28:15 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,17 @@ void	send_message(int server_pid, char *msg)
 
 void	handler(int signumber)
 {
-	static int		i = 0;
-	static char		msg = 0;
-
-	if (i < 8)
+	if (signumber == SIGUSR1)
 	{
-		msg = (msg << 1) + (signumber == SIGUSR1);
-		i++;
+		ft_putstr("Message recu avec succes");
+		ft_putchar('\n');
+		exit(EXIT_SUCCESS);
 	}
-	if (i == 8)
+	else
 	{
-		ft_putchar(msg);
-		i = 0;
-		msg = 0;
+		ft_putstr("Message failled");
+		ft_putchar('\n');
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -67,19 +65,20 @@ void	send_signal(int server_pid, char *msg)
 	mpid = ft_itoa(getpid());
 	if (mpid == NULL)
 		return ;
-	ft_putstr("pid = ");
-	ft_putstr(mpid);
 	send_message(server_pid, mpid);
 	free(mpid);
 	send_message(server_pid, msg);
-	signal(SIGUSR1, handler);
-	signal(SIGUSR2, handler);
 }
 
 int		main(int argc, char **argv)
 {
 	if (argc == 3)
+	{
 		send_signal(ft_atoi(argv[1]), argv[2]);
+		signal(SIGUSR1, handler);
+		while (1)
+			pause();
+	}
 	else
 		ft_putstr("Usage : client <pid> <message>");
 }
