@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:51:16 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/26 17:28:15 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 17:05:12 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	send_message(int server_pid, char *msg)
 
 	i = 0;
 	len = ft_strlen(msg);
-	while (i <= (int)ft_strlen(msg))
+	while (i < len + 1)
 	{
 		bits = 0;
 		while (bits < 8)
@@ -29,7 +29,7 @@ void	send_message(int server_pid, char *msg)
 				kill(server_pid, SIGUSR1);
 			else
 				kill(server_pid, SIGUSR2);
-			usleep(256);
+			usleep(100);
 			bits++;
 		}
 		i++;
@@ -70,12 +70,12 @@ void	send_signal(int server_pid, char *msg)
 	send_message(server_pid, msg);
 }
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	if (argc == 3)
 	{
-		send_signal(ft_atoi(argv[1]), argv[2]);
 		signal(SIGUSR1, handler);
+		send_signal(ft_atoi(argv[1]), argv[2]);
 		while (1)
 			pause();
 	}

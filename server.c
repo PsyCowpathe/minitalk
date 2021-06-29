@@ -6,16 +6,16 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:43:11 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/26 17:28:18 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 17:15:23 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int		traduction(int signumber, char *tmp)
+int	traduction(int signumber, char *tmp, int print)
 {
 	static int		i = 0;
-	static char		msg = 0;
+	static char		msg = '\0';
 
 	if (i < 8)
 	{
@@ -24,9 +24,11 @@ int		traduction(int signumber, char *tmp)
 	}
 	if (i == 8)
 	{
-		i = 0;
+		if (print == 5)
+			ft_putchar(msg);
 		tmp[0] = msg;
-		msg = 0;
+		i = 0;
+		msg = '\0';
 		return (1);
 	}
 	return (0);
@@ -40,49 +42,24 @@ void	handler(int signumber)
 	char			tmp;
 	int				ret;
 
-	tmp = '\0';
-	ret = traduction(signumber, &tmp);
-	while (ret == 1 && i >= 0 && i < 5)
-	{
-		if (ret == 1)
-			client_pid[i++] = tmp;
-		if (ret == 1 && tmp == '\0')
-		{
-			ft_putstr("Message from ");
-			ft_putstr(client_pid);
-			ft_putstr(" : ");
-			count++;
-			i = -1;
-		}
-		ret = 0;
-	}
-	if (i == -1)
-	{
-		if (ret == 1 && tmp == '\0')
-			count++;
-		ft_putchar(tmp);
-	}
+	ret = traduction(signumber, &tmp, i);
+	if (ret == 1 && tmp == '\0')
+		count++;
+	while (ret == 1 && i >= 0 && i < 5 && ret--)
+		client_pid[i++] = tmp;
 	if (count == 2)
 	{
 		ft_putchar('\n');
-		usleep(664);
 		kill(ft_atoi(client_pid), SIGUSR1);
-		i = 0;
 		count = 0;
-		while (i < 6)
-			client_pid[i++] = '\0';
-		i = 0;
+		while (i > 0)
+			client_pid[i--] = '\0';
 	}
 }
 
-int		main(void)
+int	main(void)
 {
-	int		end;
-	pid_t	pid;
-
-	end = 0;
-	pid = getpid();
-	ft_putnbr(pid);
+	ft_putnbr(getpid());
 	ft_putchar(' ');
 	signal(SIGUSR1, handler);
 	signal(SIGUSR2, handler);
