@@ -6,13 +6,13 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:51:16 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/29 18:17:39 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 18:21:58 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	char	*str;
 	int		i;
@@ -20,7 +20,6 @@ int		main(int argc, char **argv)
 
 	if (argc == 3)
 	{
-		i = 0;
 		d = 0;
 		str = argv[2];
 		while (str[d])

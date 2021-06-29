@@ -6,7 +6,7 @@
 /*   By: agirona <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 18:43:11 by agirona           #+#    #+#             */
-/*   Updated: 2021/06/29 18:16:43 by agirona          ###   ########lyon.fr   */
+/*   Updated: 2021/06/29 18:21:58 by agirona          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,9 @@ void	handler(int signumber)
 	}
 }
 
-int		main(void)
+int	main(void)
 {
-	int		end;
-	pid_t	pid;
-
-	end = 0;
-	pid = getpid();
-	ft_putnbr(pid);
+	ft_putnbr(getpid());
 	signal(SIGUSR1, handler);
 	signal(SIGUSR2, handler);
 	while (1)
